@@ -141,22 +141,39 @@ local function updateEsp()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWall(player)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            if rootPart and head and humanoid and shouldShow then
-                local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
-                if onScreen then
-                    local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
-                    local charSize = (camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, 3, 0)).Y - camera:WorldToViewportPoint(rootPart.Position + Vector3.new(0, 2.6, 0)).Y) / 2
-                    local boxSize = Vector2.new(math.floor(charSize * 1.8), math.floor(charSize * 1.9))
-                    local boxPosition = Vector2.new(math.floor(hrp2D.X - charSize * 1.8 / 2), math.floor(hrp2D.Y - charSize * 1.6 / 2))
+          if rootPart and head and humanoid and shouldShow then
+    local localChar = localPlayer.Character
+    local localRoot = localChar and localChar:FindFirstChild("HumanoidRootPart")
 
-                    if ESP_SETTINGS.ShowName and ESP_SETTINGS.Enabled then
-                        esp.name.Visible = true
-                        esp.name.Text = string.lower(player.Name)
-                        esp.name.Position = Vector2.new(boxSize.X / 2 + boxPosition.X, boxPosition.Y - 16)
-                        esp.name.Color = ESP_SETTINGS.NameColor
-                    else
-                        esp.name.Visible = false
-                    end
+    if localRoot then
+        local distance = (localRoot.Position - rootPart.Position).Magnitude
+
+        if distance <= 500 then
+            local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
+            if onScreen then
+                local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
+                local charSize = (camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, 3, 0)).Y - camera:WorldToViewportPoint(rootPart.Position + Vector3.new(0, 2.6, 0)).Y) / 2
+                local boxSize = Vector2.new(math.floor(charSize * 1.8), math.floor(charSize * 1.9))
+                local boxPosition = Vector2.new(math.floor(hrp2D.X - charSize * 1.8 / 2), math.floor(hrp2D.Y - charSize * 1.6 / 2))
+
+                if ESP_SETTINGS.ShowName and ESP_SETTINGS.Enabled then
+                    esp.name.Visible = true
+                    esp.name.Text = string.lower(player.Name)
+                    esp.name.Position = Vector2.new(boxSize.X / 2 + boxPosition.X, boxPosition.Y - 16)
+                    esp.name.Color = ESP_SETTINGS.NameColor
+                else
+                    esp.name.Visible = false
+                end
+            else
+                esp.name.Visible = false
+            end
+        else
+            if esp.name then
+                esp.name.Visible = false
+            end
+        end
+    end
+end
 
                     if ESP_SETTINGS.ShowBox and ESP_SETTINGS.Enabled then
                         if ESP_SETTINGS.BoxType == "2D" then
