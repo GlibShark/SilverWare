@@ -144,12 +144,6 @@ local function updateEsp()
             if rootPart and head and humanoid and shouldShow then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
-                    local MAX_DISTANCE = 300 
-
-                    local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
-                    local distance = (camera.CFrame.Position - rootPart.Position).Magnitude
-                    if onScreen and distance <= MAX_DISTANCE then
-
                     local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
                     local charSize = (camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, 3, 0)).Y - camera:WorldToViewportPoint(rootPart.Position + Vector3.new(0, 2.6, 0)).Y) / 2
                     local boxSize = Vector2.new(math.floor(charSize * 1.8), math.floor(charSize * 1.9))
